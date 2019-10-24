@@ -1,16 +1,22 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from .models import User
+
 # Create your views here.
 def index(request):
-	context = {}
+
+	userList = User.objects.order_by('-name')[:5]
+	context = {'users':userList}
 	return render(request, 'app/index.html', context)
 
 def create_profile(request):
 	return HttpResponse("Create Profile Here")
 
 def edit_profile(request, uid):
-	return HttpResponse("Edit User"+str(uid)+"'s Profile Here")
+	user = User.objects.get(pk=user_name)
+	context = {'user':user}
+	return render(request, 'app/edit_profile.html', context)
 
 def view_profile(request, uid):
 	return HttpResponse("View User"+str(uid)+"'s Profile Here")

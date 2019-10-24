@@ -5,5 +5,16 @@
 	<body>
 		<h1> Hello World </h1>
 		<h2> Bark-In Testing </h2>
+
+		{% if users %}
+			<ul>
+				{% for user in users %}
+					<li>{{ user.user_name }}</li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			<p>There are no users</p>
+		{% endif %}
+
 	</body>
 </html>
