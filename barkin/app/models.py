@@ -27,9 +27,36 @@ class User(models.Model):
 	password = models.CharField(max_length=140, blank=False, null=True)
 	email = models.EmailField(max_length=256,null=True)
 	bio = models.CharField(max_length=512,null=True)
-
 	dogs = models.ManyToManyField(Dog, blank=True)
 	def __str__(self):
 		return self.name
 
+class ParkReview(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+	review = models.CharField(max_length=512, null=True, blank=True)
+	star_rating = models.PositiveIntegerField(default=0,blank=True)
+	timeposted = models.DateField(auto_now=True)
+	def __str__(self):
+		return self.user.name
 
+class Park(models.Model):
+	name = models.CharField(max_length=140, unique=False, null=True)
+	lat = models.IntegerField(blank=False)
+	lon = models.IntegerField(blank=False)
+	info = models.CharField(max_length=512,null=True)
+	address = models.CharField(max_length=512,null=True)
+	star_rating = models.PositiveIntegerField(default=0,blank=True)
+	num_ratings = models.PositiveIntegerField(default=0,blank=True)
+	fenced_in = models.BooleanField(default=False)
+	off_leash = models.BooleanField(default=False)
+	reviews = models.ManyToManyField(ParkReview, blank=True)
+	def __str__(self):
+		return self.name
+
+class Schedule(models.Model):
+	dog = models.ForeignKey(Dog, on_delete=models.CASCADE, null=False)
+	park = models.ForeignKey(Park, on_delete=models.CASCADE, null=False)
+	time_start = models.DateField(null=False)
+	duration = models.DurationField(null=False)
+	def __str__(self):
+		return self.dog.name
