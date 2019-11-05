@@ -92,7 +92,7 @@ def edit_profile(request):
             custom_form = profile_form.save(False)
             custom_form.user = user_form
             custom_form.save()
-            return redirect('view_profile')
+            return redirect('index')
     else:
         form = EditProfileForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.userprofile)
