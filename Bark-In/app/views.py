@@ -81,7 +81,7 @@ def review_park(request, parkid):
 def schedule(request, parkid):
 	return HttpResponse("Schedule for Park ID: "+str(parkid)+" Here")
 
-@login_required
+@login_required(login_url='login')
 def edit_profile(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)

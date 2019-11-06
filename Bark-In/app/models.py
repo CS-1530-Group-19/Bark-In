@@ -13,10 +13,10 @@ def get_image_path(instance, filename):
 
 # Create your models here.
 class Dog(models.Model):
-	name = models.CharField(max_length=140, default="Un-named")
+	name = models.CharField(max_length=150, default="Un-named")
 	dog_pfp = models.FileField(upload_to=get_image_path, blank=True, null=True)
-	breed = models.CharField(max_length=140,null=True)
-	dog_size = models.CharField(max_length=140,null=True)
+	breed = models.CharField(max_length=150,null=True)
+	dog_size = models.CharField(max_length=140,null=True) #change to S/M/L
 	temperament = models.PositiveIntegerField(default=5,blank=True)
 	activity_level = models.PositiveIntegerField(default=5,blank=True)
 	volume = models.PositiveIntegerField(default=5,blank=True)
@@ -30,7 +30,6 @@ class UserProfileManager(models.Manager):
 class UserProfile(models.Model):
     #user = models.OneToOneField(User)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField(max_length=256,null=True)
     bio = models.CharField(max_length=512,null=True)
     dogs = models.ManyToManyField(Dog, blank=True)
     def __str__(self):
@@ -44,14 +43,14 @@ def createProfile(sender, **kwargs):
 
 class ParkReview(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-	review = models.CharField(max_length=512, null=True, blank=True)
+	review = models.CharField(max_length=1024, null=True, blank=True)
 	star_rating = models.PositiveIntegerField(default=0,blank=True)
 	timeposted = models.DateField(auto_now=True)
 	def __str__(self):
 		return self.user.username
 
 class Park(models.Model):
-	name = models.CharField(max_length=140, unique=False, null=True)
+	name = models.CharField(max_length=150, unique=False, null=True)
 	lat = models.IntegerField(blank=False)
 	lon = models.IntegerField(blank=False)
 	info = models.CharField(max_length=512,null=True)
