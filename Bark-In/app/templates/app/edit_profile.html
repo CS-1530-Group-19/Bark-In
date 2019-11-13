@@ -1,9 +1,9 @@
-{% extends 'app/base.html' %}
+{% extends 'app/layout.html' %}
 {% block head %}
 <title>Profile</title>
 {% endblock %}
 
-{% block body %}
+{% block content %}
 <div class="container">
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
