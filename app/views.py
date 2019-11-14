@@ -55,7 +55,39 @@ def about(request):
             'year':datetime.now().year,
         }
     )
-
+	
+def login(request):
+	assert isinstance(request, HttpRequest)
+	return render(
+		request,
+		'app/login.html',
+		{
+			'title':'Login',
+			'year':datetime.now().year
+		}
+	)
+	
+def sign_up(request):
+	assert isinstance(request, HttpRequest)
+	return render(
+		request, 
+		'app/signup.html',
+		{
+			'title':'Sign Up',
+			'year':datetime.now().year
+		}
+	)
+	
+def about(request):
+	assert isinstance(request, HttpRequest)
+	return render(
+		request,
+		'app/about.html',
+		{
+			'title':'Login',
+			'year':datetime.now().year
+		}
+	)
 
 def create_profile(request):
 	return HttpResponse("Create Profile Here")
