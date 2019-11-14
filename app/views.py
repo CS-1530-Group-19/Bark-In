@@ -78,16 +78,17 @@ def sign_up(request):
 		}
 	)
 	
-def about(request):
+def contact(request):
 	assert isinstance(request, HttpRequest)
 	return render(
-		request,
-		'app/about.html',
+		request, 
+		'app/contact.html',
 		{
-			'title':'Login',
+			'title':'Contact',
 			'year':datetime.now().year
 		}
 	)
+	
 
 def create_profile(request):
 	return HttpResponse("Create Profile Here")
