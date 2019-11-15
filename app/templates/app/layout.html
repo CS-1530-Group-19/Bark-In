@@ -58,6 +58,9 @@
 						<li class="nav-item">
 							<a class="nav-link" href="parks.html">Parks</a>
 						</li>
+						<li class="nav-item logout-button">
+							<a class="nav-link" href="/logout">Logout</a>
+						</li>
 					</ul>
 				</div>
 			</nav>
@@ -80,8 +83,11 @@
 			
 		</header>
 		
-		{% block content%}
-		{% endblock %}
+		<div class="main-body">
+			{% block content%}
+			{% endblock %}
+		</div>
+		
 		<footer class="page-footer font-small blue pt-4">
 
 			<div class="container-fluid text-center text-md-left">
