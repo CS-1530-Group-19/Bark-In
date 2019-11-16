@@ -15,9 +15,6 @@ from django.contrib.auth import logout
 def index(request):
     """Renders the home page."""
     if(request.user.id is not None):
-        print(request.user.id)
-        uid = request.user.id
-        print(uid)
         return redirect('/view_profile/%d'%request.user.id)
         #return redirect('/view_profile/')
     else:
@@ -103,7 +100,7 @@ def about(request):
 		request,
 		'app/about.html',
 		{
-			'title':'Login',
+			'title':'About the Team',
 			'year':datetime.now().year
 		}
 	)
