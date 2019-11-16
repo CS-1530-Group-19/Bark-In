@@ -153,9 +153,9 @@ def edit_profile(request):
             return redirect('index')
     else:
         form = EditProfileForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.userprofile)
+        #profile_form = ProfileForm(instance=request.user.userprofile)
         args = {}
         # args.update(csrf(request))
-        args['form'] = form 
-        args['profile_form'] = profile_form
+        #args['form'] = form 
+        #args['profile_form'] = profile_form
         return render(request, 'app/edit_profile.html', args)
