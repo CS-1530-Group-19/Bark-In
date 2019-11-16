@@ -6,7 +6,8 @@ from datetime import datetime
 from django.shortcuts import render,redirect
 from django.http import HttpRequest, HttpResponse
 from django.template import loader
-from .models import Park,UserProfile
+from .models import *
+from .models import UserProfile
 from app.forms import (EditProfileForm, ProfileForm)
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -51,74 +52,80 @@ def about(request):
             'year':datetime.now().year,
         }
     )
-	
+    
 def login(request):
-	assert isinstance(request, HttpRequest)
-	return render(
-		request,
-		'app/login.html',
-		{
-			'title':'Login',
-			'year':datetime.now().year
-		}
-	)
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/login.html',
+        {
+            'title':'Login',
+            'year':datetime.now().year
+        }
+    )
 
 def logout_view(request):
-	logout(request)
-	return render(
-		request,
-		'app/layout.html',
-		{
-			'title':'Home',
-			'year':datetime.now().year
-		}
-	)
-	
+    logout(request)
+    return render(
+        request,
+        'app/layout.html',
+        {
+            'title':'Home',
+            'year':datetime.now().year
+        }
+    )
+    
 def sign_up(request):
-	assert isinstance(request, HttpRequest)
-	return render(
-		request, 
-		'app/signup.html',
-		{
-			'title':'Sign Up',
-			'year':datetime.now().year
-		}
-	)
-	
+    assert isinstance(request, HttpRequest)
+    return render(
+        request, 
+        'app/signup.html',
+        {
+            'title':'Sign Up',
+            'year':datetime.now().year
+        }
+    )
+    
 def about(request):
-	assert isinstance(request, HttpRequest)
-	return render(
-		request,
-		'app/about.html',
-		{
-			'title':'About the Team',
-			'year':datetime.now().year
-		}
-	)
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/about.html',
+        {
+            'title':'About the Team',
+            'year':datetime.now().year
+        }
+    )
 
 def create_profile(request):
-	return HttpResponse("Create Profile Here")
+    return HttpResponse("Create Profile Here")
 
 def view_profile(request, uid):
-	assert isinstance(request, HttpRequest)
-	return render(
-		request,
-		'app/view_profile.html',
-		{
-			'title':request.user.username,
-			'year':datetime.now().year
-		}
-	)
-	#return HttpResponse("View User "+str(uid)+"'s Profile Here")
+    userProfile = UserProfile.objects.get(pk=uid)
+    #need to add a way to fetch scheduled visits from just this user
+    # for some reason passing just the userprofile doesn't work so I seperated the data
+    editAllowed = False
+    if (request.user.id == uid):
+        editAllowed = True
+
+    context = {
+    'year' : datetime.now().year,
+    'uid' : uid,
+    'userBio' : userProfile.bio,
+    'userDogs' : userProfile.dogs.all(),
+    'userProfile' : userProfile.user,
+    'editAllowed' : editAllowed, 
+    }
+    return render(request, 'app/view_profile.html', context)
 
 def create_dog_profile(request, uid):
-	return HttpResponse("Create a dog on User"+str(uid)+"'s page here")
+    return HttpResponse("Create a dog on User"+str(uid)+"'s page here")
 
 def edit_dog_profile(request, uid, dogid):
-	return HttpResponse("Edit dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
+    return HttpResponse("Edit dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
 def view_dog_profile(request, uid, dogid):
-	return HttpResponse("View dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
+    return HttpResponse("View dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
 def parks(request):
     all_parks = Park.objects.all()
@@ -131,13 +138,13 @@ def parks(request):
     return HttpResponse(template.render(context, request))
 
 def view_park(request, parkid):
-	return HttpResponse("View Park ID: "+str(parkid)+" Park Profile Here")
+    return HttpResponse("View Park ID: "+str(parkid)+" Park Profile Here")
 
 def review_park(request, parkid):
-	return HttpResponse("Review Park ID: "+str(parkid)+" Park Profile Here")
+    return HttpResponse("Review Park ID: "+str(parkid)+" Park Profile Here")
 
 def schedule(request, parkid):
-	return HttpResponse("Schedule for Park ID: "+str(parkid)+" Here")
+    return HttpResponse("Schedule for Park ID: "+str(parkid)+" Here")
 
 @login_required(login_url='login')
 def edit_profile(request):

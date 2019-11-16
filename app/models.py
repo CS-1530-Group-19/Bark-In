@@ -28,7 +28,6 @@ class UserProfileManager(models.Manager):
          pass
 
 class UserProfile(models.Model):
-    #user = models.OneToOneField(User)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.CharField(max_length=512,null=True)
     dogs = models.ManyToManyField(Dog, blank=True)
@@ -38,7 +37,6 @@ class UserProfile(models.Model):
 def createProfile(sender, **kwargs):
     if kwargs['created']:
         user_profile = UserProfile.objects.created(user=kwargs['instance'])
-        
         post_save.connect(createProfile, sender=User)
 
 class ParkReview(models.Model):
