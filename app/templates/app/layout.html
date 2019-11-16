@@ -84,8 +84,15 @@
 		</header>
 		
 		<div class="main-body">
-			{% block content%}
-			{% endblock %}
+			{% if user.is_authenticated %}
+				{% block content%}
+				{% endblock %}
+			{% else %}
+				<br>
+				<h3 align=center style="color:#FFF8DC">About Us</h3>
+				<br>
+				<p align=center style="color:#FFF8DC">Bark-In description here</p>
+			{% endif %}
 		</div>
 		
 		<footer class="page-footer font-small blue pt-4">
