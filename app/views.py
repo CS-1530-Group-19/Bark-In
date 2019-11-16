@@ -14,19 +14,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
 def index(request):
-    """Renders the home page."""
-    if(request.user.id is not None):
-        return redirect('/view_profile/%d'%request.user.id)
-        #return redirect('/view_profile/')
-    else:
-        all_parks = Park.objects.all()
-        template = loader.get_template('app/index.html')
-        context = {
-            'all_parks' : all_parks,
-            'title':'Home Page',
-            'year':datetime.now().year,
-            }
-        return HttpResponse(template.render(context, request))
+    parks = Park.objects.all()
+    context = {
+        'parks' : parks,
+        'title':'Home Page',
+        'year':datetime.now().year,
+        }
+    return render(request, 'app/index.html', context)
 
 
 def contact(request):

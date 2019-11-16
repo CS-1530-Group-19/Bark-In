@@ -1,9 +1,24 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-<ul>
-    {% for Park in all_parks %}
-    	<li><a href="/view_park/{{ Park.id }}">{{Park.name}}</a></li>
-    {% endfor %}
-</ul>
+<br>
+
+<div class="container">
+    <div class="row">
+            <div id='map' style='width: 100%; height: 400px;'></div>
+    </div>
+</div>
+
+<br>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoidHVybmVyaHVzYSIsImEiOiJjazJrd282bGwwMHh3M2NxbHpmZ2xyZGFhIn0.Xvb29vp2_cWKb7biomNDaQ';
+	var map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/turnerhusa/ck327gi822l4e1cme2py77v3m',
+		center: [-79.96341, 40.43872],
+		zoom: 12.26
+	});
+	// Add zoom and rotation controls to the map.
+	map.addControl(new mapboxgl.NavigationControl());
+</script>
 {% endblock %}
