@@ -10,6 +10,7 @@ from .models import Park,UserProfile
 from app.forms import (EditProfileForm, ProfileForm)
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 def index(request):
     """Renders the home page."""
@@ -70,6 +71,17 @@ def login(request):
 		'app/login.html',
 		{
 			'title':'Login',
+			'year':datetime.now().year
+		}
+	)
+
+def logout_view(request):
+	logout(request)
+	return render(
+		request,
+		'app/layout.html',
+		{
+			'title':'Home',
 			'year':datetime.now().year
 		}
 	)
