@@ -18,7 +18,10 @@
             <p>Bio: {{ user.userprofile.bio }}</p>
         </div>
 		<div class="col">
-			<p>dogs</p>
+			<h1>Dogs</h1>
+			{% for dogs in user.dogs %}
+			<p>{{ dog }}</p>
+			{% endfor %}
 		</div>
 		<div class="col">
 			<p>schedule</p>
