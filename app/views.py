@@ -13,14 +13,21 @@ from django.contrib.auth.decorators import login_required
 
 def index(request):
     """Renders the home page."""
-    all_parks = Park.objects.all()
-    template = loader.get_template('app/index.html')
-    context = {
-        'all_parks' : all_parks,
-        'title':'Home Page',
-        'year':datetime.now().year,
-        }
-    return HttpResponse(template.render(context, request))
+    if(request.user.id is not None):
+        print(request.user.id)
+        uid = request.user.id
+        print(uid)
+        return redirect('/view_profile/%d'%request.user.id)
+        #return redirect('/view_profile/')
+    else:
+        all_parks = Park.objects.all()
+        template = loader.get_template('app/index.html')
+        context = {
+            'all_parks' : all_parks,
+            'title':'Home Page',
+            'year':datetime.now().year,
+            }
+        return HttpResponse(template.render(context, request))
 
     """assert isinstance(request, HttpRequest)
     return render(
@@ -93,7 +100,16 @@ def create_profile(request):
 	return HttpResponse("Create Profile Here")
 
 def view_profile(request, uid):
-	return HttpResponse("View User "+str(uid)+"'s Profile Here")
+	assert isinstance(request, HttpRequest)
+	return render(
+		request,
+		'app/view_profile.html',
+		{
+			'title':request.user.username,
+			'year':datetime.now().year
+		}
+	)
+	#return HttpResponse("View User "+str(uid)+"'s Profile Here")
 
 def create_dog_profile(request, uid):
 	return HttpResponse("Create a dog on User"+str(uid)+"'s page here")
