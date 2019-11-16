@@ -27,15 +27,6 @@ def index(request):
             }
         return HttpResponse(template.render(context, request))
 
-    """assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/index.html',
-        {
-            'title':'Home Page',
-            'year':datetime.now().year,
-        }
-    )"""
 
 def contact(request):
     """Renders the contact page."""
@@ -128,6 +119,16 @@ def edit_dog_profile(request, uid, dogid):
 
 def view_dog_profile(request, uid, dogid):
 	return HttpResponse("View dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
+
+def parks(request):
+    all_parks = Park.objects.all()
+    template = loader.get_template('app/index.html')
+    context = {
+        'all_parks' : all_parks,
+        'title':'Home Page',
+        'year':datetime.now().year,
+        }
+    return HttpResponse(template.render(context, request))
 
 def view_park(request, parkid):
 	return HttpResponse("View Park ID: "+str(parkid)+" Park Profile Here")
