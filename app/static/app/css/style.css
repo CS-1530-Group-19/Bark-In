@@ -138,3 +138,11 @@ color: white;
 .links a{
 margin-left: 4px;
 }
+
+.col {
+	outline: 2px solid #ccc;
+    outline-offset: 1px;
+	background-color: cornsilk;
+	margin-left: 5px;
+	margin-right: 5px;
+}

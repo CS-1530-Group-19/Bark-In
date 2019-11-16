@@ -6,11 +6,24 @@
 {% endblock %}
 
 {% block content %}
+
+<br>
+
 <div class="container">
-    <h1>Profile</h1>
-    <p>Username: {{ user }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Bio: {{ user.userprofile.bio }}</p>
+    <div class="row">
+        <div class="col">
+            <h1>{{ user }}'s profile</h1>
+            <p>Username: {{ user }}</p>
+            <p>Email: {{ user.email }}</p>
+            <p>Bio: {{ user.userprofile.bio }}</p>
+        </div>
+		<div class="col">
+			<p>dogs</p>
+		</div>
+		<div class="col">
+			<p>schedule</p>
+		</div>
+    </div>
 </div>
 
 {% endblock %}
