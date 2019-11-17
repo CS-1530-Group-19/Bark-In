@@ -8,8 +8,9 @@ from django.http import HttpRequest, HttpResponse
 from django.template import loader
 from .models import *
 from .models import UserProfile
-from app.forms import (EditProfileForm, ProfileForm)
-from django.contrib.auth import update_session_auth_hash
+from app.forms import (EditProfileForm, ProfileForm,SignUpForm)
+from django.contrib.auth import update_session_auth_hash,authenticate
+from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
@@ -69,16 +70,20 @@ def logout_view(request):
         }
     )
     
-def sign_up(request):
-    assert isinstance(request, HttpRequest)
-    return render(
-        request, 
-        'app/signup.html',
-        {
-            'title':'Sign Up',
-            'year':datetime.now().year
-        }
-    )
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user.userprofile.bio = form.cleaned_data.get('bio')
+            user.save()
+            raw_password = form.cleaned_data.get('password')
+            auth_login(request, user)
+            return redirect('index')
+    else:
+        form = SignUpForm()
+    return render(request, 'app/signup.html', {'form': form})
     
 def about(request):
     assert isinstance(request, HttpRequest)
@@ -90,9 +95,6 @@ def about(request):
             'year':datetime.now().year
         }
     )
-
-def create_profile(request):
-    return HttpResponse("Create Profile Here")
 
 def view_profile(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
@@ -140,6 +142,7 @@ def review_park(request, parkid):
 def schedule(request, parkid):
     return HttpResponse("Schedule for Park ID: "+str(parkid)+" Here")
 
+
 @login_required(login_url='login')
 def edit_profile(request):
     if request.method == 'POST':
@@ -148,6 +151,7 @@ def edit_profile(request):
 
         if form.is_valid() and profile_form.is_valid():
             user_form = form.save()
+            user.refresh_from_db()
             custom_form = profile_form.save(False)
             custom_form.user = user_form
             custom_form.save()

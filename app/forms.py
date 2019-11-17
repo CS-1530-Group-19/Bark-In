@@ -31,3 +31,10 @@ class ProfileForm(ModelForm):
          class Meta:
              model = UserProfile
              fields = ('bio', 'dogs')
+
+class SignUpForm(UserCreationForm):
+    bio = forms.CharField(max_length=256)
+
+    class Meta:
+        model = User
+        fields = ('username','bio')
