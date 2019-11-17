@@ -151,16 +151,15 @@ def edit_profile(request):
 
         if form.is_valid() and profile_form.is_valid():
             user_form = form.save()
-            user.refresh_from_db()
             custom_form = profile_form.save(False)
             custom_form.user = user_form
             custom_form.save()
             return redirect('index')
     else:
         form = EditProfileForm(instance=request.user)
-        #profile_form = ProfileForm(instance=request.user.userprofile)
+        profile_form = ProfileForm(instance=request.user.userprofile)
         args = {}
         # args.update(csrf(request))
-        #args['form'] = form 
-        #args['profile_form'] = profile_form
+        args['form'] = form 
+        args['profile_form'] = profile_form
         return render(request, 'app/edit_profile.html', args)
