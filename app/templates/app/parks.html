@@ -1,9 +1,0 @@
-﻿{% extends "app/layout.html" %}
-
-{% block content %}
-<ul>
-    {% for Park in all_parks %}
-    <li><a href="/view_park/{{ Park.id }}">{{Park.name}}</a></li>
-    {% endfor %}
-</ul>
-{% endblock %}

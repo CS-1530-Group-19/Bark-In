@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.template import loader
 from .models import *
 from .models import UserProfile
-from app.forms import (EditProfileForm, ProfileForm,SignUpForm)
+from app.forms import (EditProfileForm, ProfileForm,SignUpForm,AddDogForm)
 from django.contrib.auth import update_session_auth_hash,authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -114,8 +114,27 @@ def view_profile(request, uid):
     }
     return render(request, 'app/view_profile.html', context)
 
-def create_dog_profile(request, uid):
-    return HttpResponse("Create a dog on User"+str(uid)+"'s page here")
+def add_dog(request, uid):
+    userProfile = UserProfile.objects.get(pk=uid)
+    if request.method == 'POST':
+        form = AddDogForm(request.POST)
+        if form.is_valid():
+            Dog = form.save()
+            Dog.refresh_from_db()  # load the profile instance created by the signal
+            Dog.name = form.cleaned_data.get('name')
+            Dog.breed = form.cleaned_data.get('breed')
+            Dog.dog_size = form.cleaned_data.get('dog_size')
+            Dog.temperament = form.cleaned_data.get('temperament')
+            Dog.activity_level = form.cleaned_data.get('activity_level')
+            Dog.volume = form.cleaned_data.get('volume')
+            Dog.notes = form.cleaned_data.get('notes')
+            Dog.save()
+            userProfile.dogs.add(Dog) #add dog to user here...
+            userProfile.save()
+            return redirect('index')
+    else:
+        form = AddDogForm()
+    return render(request, 'app/add_dog.html', {'form': form})
 
 def edit_dog_profile(request, uid, dogid):
     return HttpResponse("Edit dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")

@@ -60,12 +60,9 @@
 									<p>No Dogs</p>
 								{% endif %}
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Add a Dog</a>
+								<a class="dropdown-item" href="{%url 'add_dog' user.id%}">Add a Dog</a>
 							</div>
 						</li>
-						<!--<li class="nav-item">
-							<a class="nav-link" href="{% url 'parks'%}">Parks</a>
-						</li>--> <!-- Don't need this -->
 						<li class="nav-item logout-button">
 							<a class="nav-link" href="/logout_view"><b>Logout</b></a>
 						</li>
