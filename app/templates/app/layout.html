@@ -52,12 +52,12 @@
 								Your Dogs
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								{% if user.dogs is not None %}
-									{% for dogs in user.dogs %}
-									<p>{{ dog }}</p>
+								{% if authUserDogs is not None %}
+									{% for dogs in authUserDogs %}
+									<p>{{ dogs }}</p>
 									{% endfor %}
 								{% else %}
-									<p>No Dogs Added</p>
+									<p>No Dogs</p>
 								{% endif %}
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="#">Add a Dog</a>
