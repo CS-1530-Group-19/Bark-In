@@ -114,6 +114,20 @@ def view_profile(request, uid):
     }
     return render(request, 'app/view_profile.html', context)
 
+def view_dog(request, uid,dogid):
+    dog = Dog.objects.get(pk=dogid)
+    context = {
+    'name' : dog.name,
+    'dogpfp' : dog.dog_pfp,
+    'breed' : dog.breed,
+    'dog_size' : dog.dog_size,
+    'temperament' : dog.temperament,
+    'activity_level' : dog.activity_level,
+    'volume' : dog.volume,
+    'notes' : dog.notes,
+    }
+    return render(request, 'app/view_dog.html', context)
+
 def add_dog(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
     if request.method == 'POST':
@@ -139,8 +153,6 @@ def add_dog(request, uid):
 def edit_dog_profile(request, uid, dogid):
     return HttpResponse("Edit dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
-def view_dog_profile(request, uid, dogid):
-    return HttpResponse("View dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
 def view_park(request, parkid):
     park = Park.objects.get(pk=parkid)

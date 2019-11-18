@@ -17,11 +17,8 @@
 		<div class="col profile_col">
 			<h1>Dogs</h1>
 			{% for dogs in userDogs %}
-				<p><a href="#">{{ dogs }}</a></p> <!-- TODO: Link to the dog profile page -->
+				<p><a href="{%url 'view_dog' uid dogs.pk %}" >{{ dogs }}</a></p> <!-- TODO: Link to the dog profile page -->
 			{% endfor %}
-		</div>
-		<div class="col profile_col">
-			<h1>Schedule</h1>
 		</div>
     </div>
     {% if editAllowed %}

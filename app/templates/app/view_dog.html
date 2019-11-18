@@ -1,0 +1,24 @@
+﻿{% extends 'app/layout.html' %}
+
+{% block head %}
+<title>{{ name }}</title>
+{% endblock %}
+
+{% block content %}
+
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col profile_col">
+            <h1>{{ name }}'s profile</h1> <!-- no need to restate the user's username !-->
+            <p>Breed: {{ breed }}</p>
+            <p> Size: {{ dog_size }}</p>
+            <p>Temperament: {{ temperament }}</p>
+            <p>Activity Level: {{ activity_level }}</p>
+            <p>  Volume: {{ volume }}</p>
+            <p>Notes: {{ notes }}</p>
+        </div>
+</div>
+
+{% endblock %}
