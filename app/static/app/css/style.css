@@ -133,11 +133,18 @@ color: white;
 margin-left: 4px;
 }
 
-.col {
+.col, .col-sm, .col-lg{
 	outline: 2px solid #ccc;
     outline-offset: 1px;
 	background-color: rgba(0,0,0,0.5);
 	color: cornsilk;
 	margin-left: 10px;
 	margin-right: 10px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }
