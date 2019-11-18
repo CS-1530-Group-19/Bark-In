@@ -1,0 +1,47 @@
+﻿{% extends 'app/layout.html' %}
+
+{% block head %}
+<title>{{ name }}</title>
+{% endblock %}
+
+{% block content %}
+
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col profile_col">
+           <h1>{{name}}</h1>
+            <p>Info: {{ info }}</p>
+            <p>Address: {{ address }}</p>
+            {% if fenced_in == True%}
+            <p>This park is fenced in</p>
+            {%endif%}
+             {% if fenced_in == False%}
+            <p>This park is not fenced in</p>
+            {%endif%}
+            {% if off_leash == True%}
+            <p>Off leash is allowed</p>
+            {%endif%}
+             {% if off_leash == False%}
+            <p>Off leash not allowed</p>
+            {%endif%}
+        </div>
+		<div class="col profile_col">
+			<h1>Schedule</h1>
+            {% for schedules in parkschedules %}
+				<p>{{ schedules }} on {{schedules.date}}</p>
+                <p>from {{schedules.t_start}} to {{schedules.t_end}}</p>
+			{% endfor %}
+		</div>
+		<div class="col profile_col">
+			<h1>Reviews</h1>
+            {% for reviews in parkreviews %}
+				<p><a href="#">{{ reviews }}</a></p>
+                <p>Rating: {{reviews.star_rating}}, {{reviews.review}}</p>
+			{% endfor %}
+		</div>
+    </div>
+</div>
+
+{% endblock %}

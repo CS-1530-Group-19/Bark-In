@@ -120,7 +120,7 @@ def add_dog(request, uid):
         form = AddDogForm(request.POST)
         if form.is_valid():
             Dog = form.save()
-            Dog.refresh_from_db()  # load the profile instance created by the signal
+            Dog.refresh_from_db()
             Dog.name = form.cleaned_data.get('name')
             Dog.breed = form.cleaned_data.get('breed')
             Dog.dog_size = form.cleaned_data.get('dog_size')
@@ -129,7 +129,7 @@ def add_dog(request, uid):
             Dog.volume = form.cleaned_data.get('volume')
             Dog.notes = form.cleaned_data.get('notes')
             Dog.save()
-            userProfile.dogs.add(Dog) #add dog to user here...
+            userProfile.dogs.add(Dog) #add dog to user here
             userProfile.save()
             return redirect('index')
     else:
@@ -142,18 +142,23 @@ def edit_dog_profile(request, uid, dogid):
 def view_dog_profile(request, uid, dogid):
     return HttpResponse("View dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
-def parks(request):
-    all_parks = Park.objects.all()
-    template = loader.get_template('app/index.html')
-    context = {
-        'all_parks' : all_parks,
-        'title':'Home Page',
-        'year':datetime.now().year,
-        }
-    return HttpResponse(template.render(context, request))
-
 def view_park(request, parkid):
-    return HttpResponse("View Park ID: "+str(parkid)+" Park Profile Here")
+    park = Park.objects.get(pk=parkid)
+
+    editAllowed = False
+    context = {
+    'name' : park.name,
+    'info' : park.info,
+    'address' : park.address,
+    'star_rating' : park.star_rating,
+    'num_ratings' : park.num_ratings,
+    'fenced_in' : park.fenced_in,
+    'off_leash' : park.off_leash,
+    'parkreviews' : park.reviews.all(),
+    'parkschedules': park.schedules.all()
+    }
+    return render(request, 'app/view_park.html', context)
+
 
 def review_park(request, parkid):
     return HttpResponse("Review Park ID: "+str(parkid)+" Park Profile Here")

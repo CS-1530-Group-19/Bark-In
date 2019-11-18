@@ -48,24 +48,25 @@ class ParkReview(models.Model):
 	def __str__(self):
 		return self.user.username
 
-class Park(models.Model):
-	name = models.CharField(max_length=150, unique=False, null=True)
-	lat = models.IntegerField(blank=False)
-	lon = models.IntegerField(blank=False)
-	info = models.CharField(max_length=512,null=True)
-	address = models.CharField(max_length=512,null=True)
-	star_rating = models.PositiveIntegerField(default=0,blank=True)
-	num_ratings = models.PositiveIntegerField(default=0,blank=True)
-	fenced_in = models.BooleanField(default=False)
-	off_leash = models.BooleanField(default=False)
-	reviews = models.ManyToManyField(ParkReview, blank=True)
-	def __str__(self):
-		return self.name
-
 class Schedule(models.Model):
-	dog = models.ForeignKey(Dog, on_delete=models.CASCADE, null=False)
-	park = models.ForeignKey(Park, on_delete=models.CASCADE, null=False)
-	time_start = models.DateField(null=False)
-	duration = models.DurationField(null=False)
-	def __str__(self):
-		return self.dog.name
+    dog = models.ForeignKey(Dog, on_delete=models.CASCADE, null=False)
+    date = models.DateField(null=False)
+    t_start = models.DurationField(null=False)
+    t_end = models.DurationField(null=False)
+    def __str__(self):
+        return self.dog.name
+
+class Park(models.Model):
+    name = models.CharField(max_length=150, unique=False, null=True)
+    lat = models.IntegerField(blank=False)
+    lon = models.IntegerField(blank=False)
+    info = models.CharField(max_length=512,null=True)
+    address = models.CharField(max_length=512,null=True)
+    star_rating = models.PositiveIntegerField(default=0,blank=True)
+    num_ratings = models.PositiveIntegerField(default=0,blank=True)
+    fenced_in = models.BooleanField(default=False)
+    off_leash = models.BooleanField(default=False)
+    schedules = models.ManyToManyField(Schedule,blank=True)
+    reviews = models.ManyToManyField(ParkReview, blank=True)
+    def __str__(self):
+        return self.name
