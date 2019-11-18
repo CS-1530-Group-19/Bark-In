@@ -41,7 +41,7 @@ def update_user_profile(sender, instance, created, **kwargs):
 
 
 class ParkReview(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 	review = models.CharField(max_length=1024, null=True, blank=True)
 	star_rating = models.PositiveIntegerField(default=0,blank=True)
 	timeposted = models.DateField(auto_now=True)

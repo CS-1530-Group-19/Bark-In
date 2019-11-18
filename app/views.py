@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.template import loader
 from .models import *
 from .models import UserProfile
-from app.forms import (EditProfileForm, ProfileForm,SignUpForm,AddDogForm)
+from app.forms import (EditProfileForm, ProfileForm,SignUpForm,AddDogForm,AddReviewForm)
 from django.contrib.auth import update_session_auth_hash,authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -159,6 +159,7 @@ def view_park(request, parkid):
 
     editAllowed = False
     context = {
+    'parkID' : parkid,
     'name' : park.name,
     'info' : park.info,
     'address' : park.address,
@@ -173,7 +174,23 @@ def view_park(request, parkid):
 
 
 def review_park(request, parkid):
-    return HttpResponse("Review Park ID: "+str(parkid)+" Park Profile Here")
+    park = Park.objects.get(pk=parkid)
+    uid = request.user.id
+    userProfile = UserProfile.objects.get(pk=uid)
+    if request.method == 'POST':
+        form = AddReviewForm(request.POST)
+        if form.is_valid():
+            ParkReview = form.save()
+            ParkReview.refresh_from_db()
+            ParkReview.user = request.user
+            ParkReview.review = form.cleaned_data.get('review')
+            ParkReview.star_rating = form.cleaned_data.get('star_rating')
+            ParkReview.save()
+            park.reviews.add(ParkReview)
+            return redirect('index')
+    else:
+        form = AddReviewForm()
+    return render(request, 'app/review.html', {'form': form})
 
 def schedule(request, parkid):
     return HttpResponse("Schedule for Park ID: "+str(parkid)+" Here")

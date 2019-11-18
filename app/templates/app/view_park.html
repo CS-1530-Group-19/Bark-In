@@ -40,6 +40,9 @@
 				<p><a href="{%url 'view_profile' reviews.user.id %}">{{ reviews }}</a></p>
                 <p>Rating: {{reviews.star_rating}}, {{reviews.review}}</p>
 			{% endfor %}
+            {% if user.is_authenticated %}
+            <p><a href="{%url 'review_park' parkID %}">review park</a></p>
+            {%endif%}
 		</div>
     </div>
 </div>
