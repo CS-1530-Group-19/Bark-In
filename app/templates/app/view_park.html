@@ -47,7 +47,7 @@
                 <p>Rating: {{reviews.star_rating}}, {{reviews.review}}</p>
 			{% endfor %}
             {% if user.is_authenticated %}
-            <p><a href="{%url 'review_park' parkID %}">review park</a></p>
+            <p><a href="{%url 'review_park' parkID %}">How was your experience at {{name}}?</a></p>
             {%endif%}
 		</div>
     </div>
