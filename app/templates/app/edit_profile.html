@@ -4,15 +4,35 @@
 {% endblock %}
 
 {% block content %}
+<br>
+<div class="container-fluid signup-background">
+
+<div class="container ">
+    <div class="row">
+        <div class="col-md-6 offset-3 jumbotron signup-content">
+
 <div class="container">
-        <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <table>
-        {{ form.as_table }}
-        {{ profile_form.as_table }}
-        </table>
-        <button type="submit">Submit</button>
-    </form>
+        <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    <button class="btn btn-danger" type="submit">Edit</button>
+  </form>
     <br>
+</div>
+
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
