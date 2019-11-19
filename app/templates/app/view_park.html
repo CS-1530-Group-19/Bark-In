@@ -33,9 +33,15 @@
 				<p>{{ schedules }} on {{schedules.date}}</p>
                 <p>from {{schedules.t_start}} to {{schedules.t_end}}</p>
 			{% endfor %}
+            {% if user.is_authenticated %}
+                {%for dogs in userDogs %}
+                    <p><a href="{%url 'schedule' parkID dogs.pk %}">Add {{dogs.name}}'s schedule! </a></p>
+                {% endfor %}
+            {% endif %}
 		</div>
 		<div class="col profile_col">
 			<h1>Reviews</h1>
+            <p>Average Rating: {{star_rating}}</p>
             {% for reviews in parkreviews %}
 				<p><a href="{%url 'view_profile' reviews.user.id %}">{{ reviews }}</a></p>
                 <p>Rating: {{reviews.star_rating}}, {{reviews.review}}</p>

@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.template import loader
 from .models import *
 from .models import UserProfile
-from app.forms import (EditProfileForm, ProfileForm,SignUpForm,AddDogForm,AddReviewForm)
+from app.forms import (EditProfileForm,SignUpForm,AddDogForm,AddReviewForm,ScheduleForm)
 from django.contrib.auth import update_session_auth_hash,authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -106,8 +106,6 @@ def about(request):
 
 def view_profile(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
-    #need to add a way to fetch scheduled visits from just this user
-    # for some reason passing just the userprofile doesn't work so I seperated the data
     editAllowed = False
     if (request.user.id == uid):
         editAllowed = True
@@ -121,6 +119,7 @@ def view_profile(request, uid):
     'editAllowed' : editAllowed, 
     }
     return render(request, 'app/view_profile.html', context)
+
 
 def view_dog(request, uid,dogid):
     dog = Dog.objects.get(pk=dogid)
@@ -136,6 +135,7 @@ def view_dog(request, uid,dogid):
     }
     return render(request, 'app/view_dog.html', context)
 
+@login_required(login_url='login')
 def add_dog(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
     if request.method == 'POST':
@@ -158,29 +158,11 @@ def add_dog(request, uid):
         form = AddDogForm()
     return render(request, 'app/add_dog.html', {'form': form})
 
+@login_required(login_url='login')
 def edit_dog_profile(request, uid, dogid):
     return HttpResponse("Edit dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
-
-def view_park(request, parkid):
-    park = Park.objects.get(pk=parkid)
-
-    editAllowed = False
-    context = {
-    'parkID' : parkid,
-    'name' : park.name,
-    'info' : park.info,
-    'address' : park.address,
-    'star_rating' : park.star_rating,
-    'num_ratings' : park.num_ratings,
-    'fenced_in' : park.fenced_in,
-    'off_leash' : park.off_leash,
-    'parkreviews' : park.reviews.all(),
-    'parkschedules': park.schedules.all()
-    }
-    return render(request, 'app/view_park.html', context)
-
-
+@login_required(login_url='login')
 def review_park(request, parkid):
     park = Park.objects.get(pk=parkid)
     uid = request.user.id
@@ -200,27 +182,78 @@ def review_park(request, parkid):
         form = AddReviewForm()
     return render(request, 'app/review.html', {'form': form})
 
-def schedule(request, parkid):
-    return HttpResponse("Schedule for Park ID: "+str(parkid)+" Here")
-
 
 @login_required(login_url='login')
 def edit_profile(request):
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.userprofile)  # request.FILES is show the selected image or file
-
-        if form.is_valid() and profile_form.is_valid():
-            user_form = form.save()
-            custom_form = profile_form.save(False)
-            custom_form.user = user_form
-            custom_form.save()
+        CurrUser = request.user
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            CurrUser.refresh_from_db()
+            CurrUser.userprofile.bio = form.cleaned_data.get('bio')
+            raw_password = form.cleaned_data.get('password')
+            CurrUser.set_password(raw_password)
+            CurrUser.save()
             return redirect('index')
     else:
-        form = EditProfileForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.userprofile)
-        args = {}
-        # args.update(csrf(request))
-        args['form'] = form 
-        args['profile_form'] = profile_form
-        return render(request, 'app/edit_profile.html', args)
+        form = EditProfileForm()
+        return render(request, 'app/edit_profile.html', {'form': form})
+
+@login_required(login_url='login')
+def schedule(request, parkid, dogid):
+    park = Park.objects.get(pk=parkid)
+    dog = Dog.objects.get(pk=dogid)
+    uid = request.user.id
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            Schedule = form.save()
+            Schedule.refresh_from_db()
+            Schedule.dog = Dog.objects.get(pk=dogid)
+            Schedule.date = form.cleaned_data.get('date')
+            Schedule.t_start = form.cleaned_data.get('t_start')
+            Schedule.t_end = form.cleaned_data.get('t_end')
+            Schedule.save()
+            park.schedules.add(Schedule)
+            return redirect('index')
+    else:
+        form = ScheduleForm()
+        context = {
+        'parkID' : parkid,
+        'name' : park.name,
+        'dog' : Dog.objects.get(pk=dogid),
+        'dogName' : Dog.objects.get(pk=dogid).name,
+        'form' : form,
+        }
+    return render(request, 'app/schedule.html',context)
+
+@login_required(login_url='login')
+def view_park(request, parkid):
+    park = Park.objects.get(pk=parkid)
+    numReviews = 0
+    totStars = 0
+    for reviews in park.reviews.all():
+        totStars += reviews.star_rating
+        numReviews= numReviews + 1
+    if numReviews < 1:
+        avgStars = 0
+    else:
+        avgStars = totStars/numReviews
+    uid = request.user.id
+    userProfile = UserProfile.objects.get(pk=uid)
+    userDogs = userProfile.dogs.all()
+    editAllowed = False
+    context = {
+    'parkID' : parkid,
+    'name' : park.name,
+    'info' : park.info,
+    'address' : park.address,
+    'star_rating' : avgStars,
+    'num_ratings' : numReviews,
+    'fenced_in' : park.fenced_in,
+    'off_leash' : park.off_leash,
+    'parkreviews' : park.reviews.all(),
+    'parkschedules': park.schedules.all(),
+    'userDogs' : userDogs
+    }
+    return render(request, 'app/view_park.html', context)
