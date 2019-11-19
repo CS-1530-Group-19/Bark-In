@@ -215,13 +215,15 @@ def schedule(request, parkid):
 @login_required(login_url='login')
 def edit_profile(request):
     if request.method == 'POST':
-        if form.is_valid() and profile_form.is_valid():
-            user_form = form.save()
-            custom_form = profile_form.save(False)
-            custom_form.user = user_form
-            custom_form.save()
+        CurrUser = request.user
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            CurrUser.refresh_from_db()
+            CurrUser.userprofile.bio = form.cleaned_data.get('bio')
+            raw_password = form.cleaned_data.get('password')
+            CurrUser.set_password(raw_password)
+            CurrUser.save()
             return redirect('index')
     else:
-        form = EditProfileForm(instance=request.user)
         form = EditProfileForm()
         return render(request, 'app/edit_profile.html', {'form': form})
