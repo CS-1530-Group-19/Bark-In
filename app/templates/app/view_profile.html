@@ -13,17 +13,20 @@
         <div class="col profile_col">
             <h1>{{ userProfile }}'s profile</h1> <!-- no need to restate the user's username !-->
             <p>Bio: {{ userBio }}</p>
+            {% if editAllowed %}
+		        <a href="{% url 'edit_profile'%}">Edit Profile</a>
+	        {% endif %}
         </div>
 		<div class="col profile_col">
 			<h1>Dogs</h1>
 			{% for dogs in userDogs %}
-				<p><a href="{%url 'view_dog' uid dogs.pk %}" >{{ dogs }}</a></p> <!-- TODO: Link to the dog profile page -->
+				<p><a href="{%url 'view_dog' uid dogs.pk %}" >{{ dogs }}</a></p> 
 			{% endfor %}
+             {% if editAllowed %}
+            <a href="{%url 'add_dog' user.id%}">Add a Dog</a>
+            {% endif %}
 		</div>
     </div>
-    {% if editAllowed %}
-		<a href="{% url 'edit_profile'%}">Edit Profile</a>
-	{% endif %}
 </div>
 
 {% endblock %}
