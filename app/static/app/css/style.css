@@ -6,6 +6,14 @@ body, html {
 	background-color: darkcyan;
 }
 
+footer{
+  background-color:#343a40!important;
+}
+
+.footer-copyright{
+  color:white;
+}
+
 .hero {
 	
 	height: 300px;
@@ -146,10 +154,33 @@ margin-left: 4px;
   display: block;
   margin-left: auto;
   margin-right: auto;
+<<<<<<< HEAD
   width: 50%;
+}
+
+
+/*.mapboxgl-popup-content>.mapboxgl-popup-close-button {
+  display:none;
+}*/
+
+.popup-row{
+  background: none;
+  border: none;
+  margin:auto!important;
+}
+
+.popup-col{
+  background: none;
+  border:none;
+  outline: none;
+  color:black;
 }
 
 .mapboxgl-popup {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+.vert-center {
+	padding: 5% 0;
 }
