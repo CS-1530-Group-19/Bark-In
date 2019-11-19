@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.template import loader
 from .models import *
 from .models import UserProfile
-from app.forms import (EditProfileForm, ProfileForm,SignUpForm,AddDogForm,AddReviewForm)
+from app.forms import (EditProfileForm, ProfileForm,SignUpForm,AddDogForm,AddReviewForm,ScheduleForm)
 from django.contrib.auth import update_session_auth_hash,authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -193,8 +193,24 @@ def review_park(request, parkid):
     return render(request, 'app/review.html', {'form': form})
 
 def schedule(request, parkid):
-    return HttpResponse("Schedule for Park ID: "+str(parkid)+" Here")
-
+    park = Park.objects.get(pk=parkid)
+    uid = request.user.id
+    userProfile = UserProfile.objects.get(pk=uid)
+    userDogs = userProfile.dogs.all()
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            Schedule = form.save()
+            Schedule.refresh_from_db()
+            Schedule.dog = form.cleaned_data.get('dog')
+            Schedule.date = form.cleaned_data.get('date')
+            Schedule.t_start = form.cleaned_data.get('Time start')
+            Schedule.t_end = form.cleaned_data.get('Time end')
+            park.schedules.add(Schedule)
+            return redirect('index')
+    else:
+        form = ScheduleForm()   
+    return render(request, 'app/schedule.html', {'form': form})
 
 @login_required(login_url='login')
 def edit_profile(request):

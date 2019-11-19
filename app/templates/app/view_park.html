@@ -33,6 +33,9 @@
 				<p>{{ schedules }} on {{schedules.date}}</p>
                 <p>from {{schedules.t_start}} to {{schedules.t_end}}</p>
 			{% endfor %}
+            {% if user.is_authenticated %}
+            <p><a href="{%url 'schedule' parkID %}">schedule</a></p>
+            {%endif%}
 		</div>
 		<div class="col profile_col">
 			<h1>Reviews</h1>

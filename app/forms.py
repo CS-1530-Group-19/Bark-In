@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm,UserChangeForm
 from django.forms import ModelForm
-from app.models import UserProfile,Dog,ParkReview
+from app.models import UserProfile,Dog,ParkReview,Schedule
 from django.utils.translation import ugettext_lazy as _
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -47,3 +47,8 @@ class AddReviewForm(ModelForm):
     class Meta:
         model = ParkReview
         fields = ('star_rating','review')
+
+class ScheduleForm(ModelForm):
+    class Meta:
+        model = Schedule
+        fields = ('dog','date','t_start', 't_end')
