@@ -14,10 +14,18 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
+
 def index(request):
     parks = Park.objects.all()
+    park_string_array = ""
+    className = "'mapboxgl'"
+    for park in parks:
+        park_string_array += '{"type": "Feature", "properties": { "description": "<div class='+className+'>'+park.name+'</div>",},"geometry": {"type": "Point","coordinates": ['+str(park.lon)+', '+str(park.lat)+']}}'
+        park_string_array += ","
+        park_string_array += "\n"
+    park_string_array = park_string_array[:-2]
     context = {
-        'parks' : parks,
+        'park_string_array' : park_string_array,
         'title':'Home Page',
         'year':datetime.now().year,
         }

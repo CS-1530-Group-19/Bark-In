@@ -58,8 +58,8 @@ class Schedule(models.Model):
 
 class Park(models.Model):
     name = models.CharField(max_length=150, unique=False, null=True)
-    lat = models.IntegerField(blank=False)
-    lon = models.IntegerField(blank=False)
+    lat = models.FloatField(blank=False)
+    lon = models.FloatField(blank=False)
     info = models.CharField(max_length=512,null=True)
     address = models.CharField(max_length=512,null=True)
     star_rating = models.PositiveIntegerField(default=0,blank=True)

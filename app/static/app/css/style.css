@@ -148,3 +148,8 @@ margin-left: 4px;
   margin-right: auto;
   width: 50%;
 }
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
