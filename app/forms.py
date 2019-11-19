@@ -47,4 +47,4 @@ class AddReviewForm(ModelForm):
 class ScheduleForm(ModelForm):
     class Meta:
         model = Schedule
-        fields = ('dog','date','t_start', 't_end')
+        fields = ('date','t_start', 't_end')

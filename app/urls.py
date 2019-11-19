@@ -14,5 +14,5 @@ urlpatterns = [
     path('view_profile/<int:uid>/view_dog/<int:dogid>', views.view_dog, name='view_dog'),
     path('view_park/<int:parkid>', views.view_park, name='view_park'),
     path('view_park/<int:parkid>/review_park', views.review_park, name='review_park'),
-    path('view_park/<int:parkid>/schedule', views.schedule, name='schedule'),
+    path('view_park/<int:parkid>/schedule/<int:dogid>', views.schedule, name='schedule'),
 ]

@@ -49,7 +49,7 @@ class ParkReview(models.Model):
 		return self.user.username
 
 class Schedule(models.Model):
-    dog = models.ForeignKey(Dog, on_delete=models.CASCADE, null=False)
+    dog = models.ForeignKey(Dog, on_delete=models.CASCADE, null=True,blank=True)
     date = models.DateField(null=False)
     t_start = models.DurationField(null=False)
     t_end = models.DurationField(null=False)
@@ -62,8 +62,6 @@ class Park(models.Model):
     lon = models.IntegerField(blank=False)
     info = models.CharField(max_length=512,null=True)
     address = models.CharField(max_length=512,null=True)
-    star_rating = models.PositiveIntegerField(default=0,blank=True)
-    num_ratings = models.PositiveIntegerField(default=0,blank=True)
     fenced_in = models.BooleanField(default=False)
     off_leash = models.BooleanField(default=False)
     schedules = models.ManyToManyField(Schedule,blank=True)

@@ -161,7 +161,13 @@ def view_park(request, parkid):
     for reviews in park.reviews.all():
         totStars += reviews.star_rating
         numReviews= numReviews + 1
-    avgStars = totStars/numReviews
+    if numReviews < 1:
+        avgStars = 0
+    else:
+        avgStars = totStars/numReviews
+    uid = request.user.id
+    userProfile = UserProfile.objects.get(pk=uid)
+    userDogs = userProfile.dogs.all()
     editAllowed = False
     context = {
     'parkID' : parkid,
@@ -173,7 +179,8 @@ def view_park(request, parkid):
     'fenced_in' : park.fenced_in,
     'off_leash' : park.off_leash,
     'parkreviews' : park.reviews.all(),
-    'parkschedules': park.schedules.all()
+    'parkschedules': park.schedules.all(),
+    'userDogs' : userDogs
     }
     return render(request, 'app/view_park.html', context)
 
@@ -197,25 +204,32 @@ def review_park(request, parkid):
         form = AddReviewForm()
     return render(request, 'app/review.html', {'form': form})
 
-def schedule(request, parkid):
+def schedule(request, parkid, dogid):
     park = Park.objects.get(pk=parkid)
+    dog = Dog.objects.get(pk=dogid)
     uid = request.user.id
-    userProfile = UserProfile.objects.get(pk=uid)
-    userDogs = userProfile.dogs.all()
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
             Schedule = form.save()
             Schedule.refresh_from_db()
-            Schedule.dog = form.cleaned_data.get('dog')
+            Schedule.dog = Dog.objects.get(pk=dogid)
             Schedule.date = form.cleaned_data.get('date')
-            Schedule.t_start = form.cleaned_data.get('Time start')
-            Schedule.t_end = form.cleaned_data.get('Time end')
+            Schedule.t_start = form.cleaned_data.get('t_start')
+            Schedule.t_end = form.cleaned_data.get('t_end')
+            Schedule.save()
             park.schedules.add(Schedule)
             return redirect('index')
     else:
-        form = ScheduleForm()   
-    return render(request, 'app/schedule.html', {'form': form})
+        form = ScheduleForm()
+        context = {
+        'parkID' : parkid,
+        'name' : park.name,
+        'dog' : Dog.objects.get(pk=dogid),
+        'dogName' : Dog.objects.get(pk=dogid).name,
+        'form' : form,
+        }
+    return render(request, 'app/schedule.html',context)
 
 @login_required(login_url='login')
 def edit_profile(request):
