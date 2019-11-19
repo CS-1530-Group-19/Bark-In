@@ -98,8 +98,6 @@ def about(request):
 
 def view_profile(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
-    #need to add a way to fetch scheduled visits from just this user
-    # for some reason passing just the userprofile doesn't work so I seperated the data
     editAllowed = False
     if (request.user.id == uid):
         editAllowed = True
@@ -113,6 +111,7 @@ def view_profile(request, uid):
     'editAllowed' : editAllowed, 
     }
     return render(request, 'app/view_profile.html', context)
+
 
 def view_dog(request, uid,dogid):
     dog = Dog.objects.get(pk=dogid)
@@ -128,6 +127,7 @@ def view_dog(request, uid,dogid):
     }
     return render(request, 'app/view_dog.html', context)
 
+@login_required(login_url='login')
 def add_dog(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
     if request.method == 'POST':
@@ -150,10 +150,76 @@ def add_dog(request, uid):
         form = AddDogForm()
     return render(request, 'app/add_dog.html', {'form': form})
 
+@login_required(login_url='login')
 def edit_dog_profile(request, uid, dogid):
     return HttpResponse("Edit dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
+@login_required(login_url='login')
+def review_park(request, parkid):
+    park = Park.objects.get(pk=parkid)
+    uid = request.user.id
+    userProfile = UserProfile.objects.get(pk=uid)
+    if request.method == 'POST':
+        form = AddReviewForm(request.POST)
+        if form.is_valid():
+            ParkReview = form.save()
+            ParkReview.refresh_from_db()
+            ParkReview.user = request.user
+            ParkReview.review = form.cleaned_data.get('review')
+            ParkReview.star_rating = form.cleaned_data.get('star_rating')
+            ParkReview.save()
+            park.reviews.add(ParkReview)
+            return redirect('index')
+    else:
+        form = AddReviewForm()
+    return render(request, 'app/review.html', {'form': form})
 
+
+@login_required(login_url='login')
+def edit_profile(request):
+    if request.method == 'POST':
+        CurrUser = request.user
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            CurrUser.refresh_from_db()
+            CurrUser.userprofile.bio = form.cleaned_data.get('bio')
+            raw_password = form.cleaned_data.get('password')
+            CurrUser.set_password(raw_password)
+            CurrUser.save()
+            return redirect('index')
+    else:
+        form = EditProfileForm()
+        return render(request, 'app/edit_profile.html', {'form': form})
+
+@login_required(login_url='login')
+def schedule(request, parkid, dogid):
+    park = Park.objects.get(pk=parkid)
+    dog = Dog.objects.get(pk=dogid)
+    uid = request.user.id
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            Schedule = form.save()
+            Schedule.refresh_from_db()
+            Schedule.dog = Dog.objects.get(pk=dogid)
+            Schedule.date = form.cleaned_data.get('date')
+            Schedule.t_start = form.cleaned_data.get('t_start')
+            Schedule.t_end = form.cleaned_data.get('t_end')
+            Schedule.save()
+            park.schedules.add(Schedule)
+            return redirect('index')
+    else:
+        form = ScheduleForm()
+        context = {
+        'parkID' : parkid,
+        'name' : park.name,
+        'dog' : Dog.objects.get(pk=dogid),
+        'dogName' : Dog.objects.get(pk=dogid).name,
+        'form' : form,
+        }
+    return render(request, 'app/schedule.html',context)
+
+@login_required(login_url='login')
 def view_park(request, parkid):
     park = Park.objects.get(pk=parkid)
     numReviews = 0
@@ -183,66 +249,3 @@ def view_park(request, parkid):
     'userDogs' : userDogs
     }
     return render(request, 'app/view_park.html', context)
-
-
-def review_park(request, parkid):
-    park = Park.objects.get(pk=parkid)
-    uid = request.user.id
-    userProfile = UserProfile.objects.get(pk=uid)
-    if request.method == 'POST':
-        form = AddReviewForm(request.POST)
-        if form.is_valid():
-            ParkReview = form.save()
-            ParkReview.refresh_from_db()
-            ParkReview.user = request.user
-            ParkReview.review = form.cleaned_data.get('review')
-            ParkReview.star_rating = form.cleaned_data.get('star_rating')
-            ParkReview.save()
-            park.reviews.add(ParkReview)
-            return redirect('index')
-    else:
-        form = AddReviewForm()
-    return render(request, 'app/review.html', {'form': form})
-
-def schedule(request, parkid, dogid):
-    park = Park.objects.get(pk=parkid)
-    dog = Dog.objects.get(pk=dogid)
-    uid = request.user.id
-    if request.method == 'POST':
-        form = ScheduleForm(request.POST)
-        if form.is_valid():
-            Schedule = form.save()
-            Schedule.refresh_from_db()
-            Schedule.dog = Dog.objects.get(pk=dogid)
-            Schedule.date = form.cleaned_data.get('date')
-            Schedule.t_start = form.cleaned_data.get('t_start')
-            Schedule.t_end = form.cleaned_data.get('t_end')
-            Schedule.save()
-            park.schedules.add(Schedule)
-            return redirect('index')
-    else:
-        form = ScheduleForm()
-        context = {
-        'parkID' : parkid,
-        'name' : park.name,
-        'dog' : Dog.objects.get(pk=dogid),
-        'dogName' : Dog.objects.get(pk=dogid).name,
-        'form' : form,
-        }
-    return render(request, 'app/schedule.html',context)
-
-@login_required(login_url='login')
-def edit_profile(request):
-    if request.method == 'POST':
-        CurrUser = request.user
-        form = EditProfileForm(request.POST)
-        if form.is_valid():
-            CurrUser.refresh_from_db()
-            CurrUser.userprofile.bio = form.cleaned_data.get('bio')
-            raw_password = form.cleaned_data.get('password')
-            CurrUser.set_password(raw_password)
-            CurrUser.save()
-            return redirect('index')
-    else:
-        form = EditProfileForm()
-        return render(request, 'app/edit_profile.html', {'form': form})

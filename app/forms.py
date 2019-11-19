@@ -48,3 +48,8 @@ class ScheduleForm(ModelForm):
     class Meta:
         model = Schedule
         fields = ('date','t_start', 't_end')
+
+class EditDogForm(ModelForm):
+    class Meta:
+        model = Dog
+        fields = ('name','breed','dog_size','temperament','activity_level','volume','notes')
