@@ -156,15 +156,20 @@ def edit_dog_profile(request, uid, dogid):
 
 def view_park(request, parkid):
     park = Park.objects.get(pk=parkid)
-
+    numReviews = 0
+    totStars = 0
+    for reviews in park.reviews.all():
+        totStars += reviews.star_rating
+        numReviews= numReviews + 1
+    avgStars = totStars/numReviews
     editAllowed = False
     context = {
     'parkID' : parkid,
     'name' : park.name,
     'info' : park.info,
     'address' : park.address,
-    'star_rating' : park.star_rating,
-    'num_ratings' : park.num_ratings,
+    'star_rating' : avgStars,
+    'num_ratings' : numReviews,
     'fenced_in' : park.fenced_in,
     'off_leash' : park.off_leash,
     'parkreviews' : park.reviews.all(),
