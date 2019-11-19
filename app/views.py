@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.template import loader
 from .models import *
 from .models import UserProfile
-from app.forms import (EditProfileForm, ProfileForm,SignUpForm,AddDogForm,AddReviewForm,ScheduleForm)
+from app.forms import (EditProfileForm,SignUpForm,AddDogForm,AddReviewForm,ScheduleForm)
 from django.contrib.auth import update_session_auth_hash,authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -215,9 +215,6 @@ def schedule(request, parkid):
 @login_required(login_url='login')
 def edit_profile(request):
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.userprofile)  # request.FILES is show the selected image or file
-
         if form.is_valid() and profile_form.is_valid():
             user_form = form.save()
             custom_form = profile_form.save(False)
@@ -226,9 +223,5 @@ def edit_profile(request):
             return redirect('index')
     else:
         form = EditProfileForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.userprofile)
-        args = {}
-        # args.update(csrf(request))
-        args['form'] = form 
-        args['profile_form'] = profile_form
-        return render(request, 'app/edit_profile.html', args)
+        form = EditProfileForm()
+        return render(request, 'app/edit_profile.html', {'form': form})

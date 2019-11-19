@@ -47,22 +47,6 @@
 						<li class="nav-item">
 							<a class="nav-link" href="{%url 'view_profile' user.id%}">Profile</a>
 						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Your Dogs
-							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								{% if authUserDogs is not None %}
-									{% for dogs in authUserDogs %}
-									<p>{{ dogs }}</p>
-									{% endfor %}
-								{% else %}
-									<p>No Dogs</p>
-								{% endif %}
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="{%url 'add_dog' user.id%}">Add a Dog</a>
-							</div>
-						</li>
 						<li class="nav-item logout-button">
 							<a class="nav-link" href="/logout_view"><b>Logout</b></a>
 						</li>
