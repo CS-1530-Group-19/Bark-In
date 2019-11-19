@@ -20,7 +20,7 @@
 		<div class="col profile_col">
 			<h1>Dogs</h1>
 			{% for dogs in userDogs %}
-				<p><a href="{%url 'view_dog' uid dogs.pk %}" >{{ dogs }}</a></p> 
+				<p><a href="{%url 'view_dog' uid dogs.pk %}" >{{ dogs }}</a> : {{dogs.breed}}</p> 
 			{% endfor %}
              {% if editAllowed %}
             <a href="{%url 'add_dog' user.id%}">Add a dog to your profile</a>
