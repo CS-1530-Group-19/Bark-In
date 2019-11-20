@@ -7,12 +7,10 @@ from django.shortcuts import render,redirect
 from django.http import HttpRequest, HttpResponse
 from django.template import loader
 from .models import *
-from .models import UserProfile
 from app.forms import (EditProfileForm,SignUpForm,AddDogForm,AddReviewForm,ScheduleForm)
-from django.contrib.auth import update_session_auth_hash,authenticate
+from django.contrib.auth import update_session_auth_hash,authenticate,logout
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
 
 
 def index(request):
@@ -177,8 +175,6 @@ def edit_dog_profile(request, uid, dogid):
 @login_required(login_url='login')
 def review_park(request, parkid):
     park = Park.objects.get(pk=parkid)
-    uid = request.user.id
-    userProfile = UserProfile.objects.get(pk=uid)
     if request.method == 'POST':
         form = AddReviewForm(request.POST)
         if form.is_valid():
@@ -215,7 +211,6 @@ def edit_profile(request):
 def schedule(request, parkid, dogid):
     park = Park.objects.get(pk=parkid)
     dog = Dog.objects.get(pk=dogid)
-    uid = request.user.id
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
