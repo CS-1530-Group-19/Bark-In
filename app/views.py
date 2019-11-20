@@ -19,8 +19,20 @@ def index(request):
     parks = Park.objects.all()
     park_string_array = ""
     className = "'mapboxgl'"
+    classNameRow = "'popup-row row'"
+    classNameCol = "'popup-col col'"
+
     for park in parks:
-        park_string_array += '{"type": "Feature", "properties": { "description": "<div class='+className+'>'+park.name+'</div>",},"geometry": {"type": "Point","coordinates": ['+str(park.lon)+', '+str(park.lat)+']}}'
+        numReviews = 0
+        avgStars = 0
+        totStars = 0
+        for reviews in park.reviews.all():
+            totStars += reviews.star_rating
+            numReviews = numReviews + 1
+        if numReviews >= 1:
+            avgStars = totStars/numReviews
+        view_park_href = "'view_park/"+str(park.id)+"'"
+        park_string_array += '{"type": "Feature", "properties": { "description": "<strong><a href='+view_park_href+'>'+park.name+'</a></strong><p>'+park.info+'</p>",},"geometry": {"type": "Point","coordinates": ['+str(park.lon)+', '+str(park.lat)+']}}'
         park_string_array += ","
         park_string_array += "\n"
     park_string_array = park_string_array[:-2]

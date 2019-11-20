@@ -1,6 +1,13 @@
 ﻿{% extends "app/layout.html" %}
 
 {% block content %}
+
+<br>
+<div class="container-fluid signup-background">
+
+<div class="container ">
+    <div class="row">
+        <div class="col-md-6 offset-3 jumbotron signup-content">
 <h2>Review</h2>
 <form method="post">
     {% csrf_token %}
@@ -18,4 +25,10 @@
     {% endfor %}
     <button type="submit">Submit Review</button>
 </form>
+
+			</div>
+		</div>
+	</div>
+</div>
+
 {% endblock %}
