@@ -117,4 +117,5 @@ bin/wfastcgi.py
 obj/Debug/Bark-In.pyproj.CoreCompileInputs.cache
 obj/Debug/Bark-In.pyproj.FileListAbsolute.txt
 photos/
-app/migrations/0001_initial.py
+app/migrations/
+app/migrations/0002_auto_20191118_1512.py
