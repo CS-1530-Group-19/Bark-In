@@ -10,7 +10,7 @@ endif
 run:
 	python manage.py runserver
 
-reset_db:
+reset_db: db.sqlite3
 	mv app/migrations/__init__.py make_temp.py
 	rm -r app/migrations/*
 	mv make_temp.py app/migrations/__init__.py
