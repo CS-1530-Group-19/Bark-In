@@ -23,9 +23,10 @@ class BootstrapAuthenticationForm(AuthenticationForm):
 class EditProfileForm(ModelForm):
     bio = forms.CharField(max_length=256)
     password = forms.PasswordInput({'class': 'form-control','placeholder':'Password'})
+    favoritePark = forms.CharField(max_length=150)
     class Meta:
         model=User
-        fields = ('password','bio')
+        fields = ('password','bio','favoritePark')
 
 class SignUpForm(UserCreationForm):
     bio = forms.CharField(max_length=256)

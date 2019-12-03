@@ -123,6 +123,7 @@ def view_profile(request, uid):
     context = {
     'year' : datetime.now().year,
     'uid' : uid,
+    'userFavoritePark' : userProfile.favoritePark,
     'userBio' : userProfile.bio,
     'userDogs' : userProfile.dogs.all(),
     'userProfile' : userProfile.user,
@@ -221,6 +222,7 @@ def edit_profile(request):
             CurrUser.userprofile.bio = form.cleaned_data.get('bio')
             raw_password = form.cleaned_data.get('password')
             CurrUser.set_password(raw_password)
+            CurrUser.userprofile.favoritePark = form.cleaned_data.get('favoritePark')
             CurrUser.save()
             return redirect('index')
     else:
