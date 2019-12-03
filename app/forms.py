@@ -43,6 +43,7 @@ class AddDogForm(ModelForm):
         fields = ('name','breed','dog_size','temperament','activity_level','volume','notes','dog_pfp')
 
 class AddReviewForm(ModelForm):
+    star_rating = forms.IntegerField(max_value = 5, min_value = 0)
     class Meta:
         model = ParkReview
         fields = ('star_rating','review')

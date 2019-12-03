@@ -116,3 +116,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 LOGIN_REDIRECT_URL ='/'
 AUTH_PROFILE_MODULE = 'app.UserProfile'
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440*4
