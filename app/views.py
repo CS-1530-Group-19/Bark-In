@@ -4,10 +4,10 @@ Definition of views.
 
 from datetime import datetime
 from django.shortcuts import render,redirect
-from django.http import HttpRequest, HttpResponse
-from django.template import loader
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.template import loader,RequestContext
 from .models import *
-from app.forms import (EditProfileForm,SignUpForm,AddDogForm,AddReviewForm,ScheduleForm)
+from app.forms import (EditProfileForm,SignUpForm,AddDogForm,AddReviewForm,ScheduleForm,EditDogForm)
 from django.contrib.auth import update_session_auth_hash,authenticate,logout
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -123,6 +123,7 @@ def view_profile(request, uid):
     context = {
     'year' : datetime.now().year,
     'uid' : uid,
+    'userFavoritePark' : userProfile.favoritePark,
     'userBio' : userProfile.bio,
     'userDogs' : userProfile.dogs.all(),
     'userProfile' : userProfile.user,
@@ -131,11 +132,11 @@ def view_profile(request, uid):
     return render(request, 'app/view_profile.html', context)
 
 
-def view_dog(request, uid,dogid):
+def view_dog(request, uid, dogid):
     dog = Dog.objects.get(pk=dogid)
     context = {
     'name' : dog.name,
-    'dogpfp' : dog.dog_pfp,
+    'dog_pfp' : dog.dog_pfp,
     'breed' : dog.breed,
     'dog_size' : dog.dog_size,
     'temperament' : dog.temperament,
@@ -146,31 +147,51 @@ def view_dog(request, uid,dogid):
     return render(request, 'app/view_dog.html', context)
 
 @login_required(login_url='login')
+def edit_dog_profile(request, uid, dogid):
+    if request.method == 'POST':
+        dog = Dog.objects.get(pk=dogid)
+        form = EditDogForm(request.POST,request.FILES)
+        if form.is_valid():
+            dog.refresh_from_db()
+            dog.name = form.cleaned_data.get('name')
+            dog.breed = form.cleaned_data.get('breed')
+            dog.dog_size = form.cleaned_data.get('dog_size')
+            dog.temperament = form.cleaned_data.get('temperament')
+            dog.activity_level = form.cleaned_data.get('activity_level')
+            dog.volume = form.cleaned_data.get('volume')
+            dog.notes = form.cleaned_data.get('notes')
+            dog.dog_pfp = request.FILES['dog_pfp']
+            dog.save()
+            return redirect('index')
+    else:
+        form = EditDogForm()
+        return render(request, 'app/edit_dog.html', {'form': form})
+
+
+@login_required(login_url='login')
 def add_dog(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
     if request.method == 'POST':
-        form = AddDogForm(request.POST)
+        form = AddDogForm(request.POST,request.FILES)
         if form.is_valid():
-            Dog = form.save()
-            Dog.refresh_from_db()
-            Dog.name = form.cleaned_data.get('name')
-            Dog.breed = form.cleaned_data.get('breed')
-            Dog.dog_size = form.cleaned_data.get('dog_size')
-            Dog.temperament = form.cleaned_data.get('temperament')
-            Dog.activity_level = form.cleaned_data.get('activity_level')
-            Dog.volume = form.cleaned_data.get('volume')
-            Dog.notes = form.cleaned_data.get('notes')
-            Dog.save()
-            userProfile.dogs.add(Dog) #add dog to user here
+            newDog = Dog(dog_pfp = request.FILES['dog_pfp'])
+            newDog = form.save()
+            newDog.refresh_from_db()
+            newDog.name = form.cleaned_data.get('name')
+            newDog.breed = form.cleaned_data.get('breed')
+            newDog.dog_size = form.cleaned_data.get('dog_size')
+            newDog.temperament = form.cleaned_data.get('temperament')
+            newDog.activity_level = form.cleaned_data.get('activity_level')
+            newDog.volume = form.cleaned_data.get('volume')
+            newDog.notes = form.cleaned_data.get('notes')
+            newDog.save()
+            userProfile.dogs.add(newDog) #add dog to user here
             userProfile.save()
             return redirect('index')
     else:
         form = AddDogForm()
     return render(request, 'app/add_dog.html', {'form': form})
 
-@login_required(login_url='login')
-def edit_dog_profile(request, uid, dogid):
-    return HttpResponse("Edit dog"+str(dogid)+"'s profile' on User"+str(uid)+"'s page here")
 
 @login_required(login_url='login')
 def review_park(request, parkid):
@@ -201,6 +222,7 @@ def edit_profile(request):
             CurrUser.userprofile.bio = form.cleaned_data.get('bio')
             raw_password = form.cleaned_data.get('password')
             CurrUser.set_password(raw_password)
+            CurrUser.userprofile.favoritePark = form.cleaned_data.get('favoritePark')
             CurrUser.save()
             return redirect('index')
     else:
