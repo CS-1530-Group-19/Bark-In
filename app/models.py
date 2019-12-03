@@ -15,12 +15,12 @@ def get_image_path(instance, filename):
 # Create your models here.
 class Dog(models.Model):
 	name = models.CharField(max_length=150, default="Un-named")
-	dog_pfp = models.FileField(upload_to=get_image_path, blank=True, null=True)
-	breed = models.CharField(max_length=150,null=True)
-	dog_size = models.CharField(max_length=140,null=True) #change to S/M/L
-	temperament = models.PositiveIntegerField(default=5,blank=True)
-	activity_level = models.PositiveIntegerField(default=5,blank=True)
-	volume = models.PositiveIntegerField(default=5,blank=True)
+	dog_pfp = models.FileField(upload_to='dogpics', blank=True, null=True)
+	breed = models.CharField(max_length=150, null=True)
+	dog_size = models.CharField(max_length=140, null=True) #change to S/M/L
+	temperament = models.PositiveIntegerField(blank=True)
+	activity_level = models.PositiveIntegerField(blank=True)
+	volume = models.PositiveIntegerField(blank=True)
 	notes = models.CharField(max_length=512,null=True)
 	def __str__(self):
 		return self.name

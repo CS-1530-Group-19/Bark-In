@@ -35,9 +35,11 @@ class SignUpForm(UserCreationForm):
         fields = ('username','bio')
 
 class AddDogForm(ModelForm):
+    name = forms.CharField(max_length = 150)
+    dog_pfp = forms.FileField(label = 'select a picture')
     class Meta:
         model = Dog
-        fields = ('name','breed','dog_size','temperament','activity_level','volume','notes')
+        fields = ('name','breed','dog_size','temperament','activity_level','volume','notes','dog_pfp')
 
 class AddReviewForm(ModelForm):
     class Meta:
@@ -50,6 +52,7 @@ class ScheduleForm(ModelForm):
         fields = ('date','t_start', 't_end')
 
 class EditDogForm(ModelForm):
+    dog_pfp = forms.FileField(label = 'select a picture')
     class Meta:
         model = Dog
-        fields = ('name','breed','dog_size','temperament','activity_level','volume','notes')
+        fields = ('name','breed','dog_size','temperament','activity_level','volume','notes','dog_pfp')

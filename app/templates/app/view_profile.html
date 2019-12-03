@@ -21,9 +21,12 @@
 			<h1>Dogs</h1>
 			{% for dogs in userDogs %}
 				<p><a href="{%url 'view_dog' uid dogs.pk %}" >{{ dogs }}</a> : {{dogs.breed}}</p> 
+                {% if editAllowed %}
+                <a href="{%url 'edit_dog_profile' uid dogs.pk%}">Edit Dog</a>
+                {% endif %}
 			{% endfor %}
              {% if editAllowed %}
-            <a href="{%url 'add_dog' user.id%}">Add a dog to your profile</a>
+           <p><a href="{%url 'add_dog' user.id%}">Add a dog to your profile</a></p>
             {% endif %}
 		</div>
     </div>
