@@ -32,6 +32,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.CharField(max_length=512,null=True)
     dogs = models.ManyToManyField(Dog, blank=True)
+    schedulesMade = models.PositiveIntegerField(default=0)
     favoritePark = models.CharField(max_length = 150, default = 'none')
 
 @receiver(post_save, sender=User)

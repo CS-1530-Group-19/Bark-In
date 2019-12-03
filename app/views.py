@@ -117,6 +117,19 @@ def about(request):
 def view_profile(request, uid):
     userProfile = UserProfile.objects.get(pk=uid)
     editAllowed = False
+
+    achievmentLevel = "None"
+    color = "default"
+    if userProfile.schedulesMade >= 1 and userProfile.schedulesMade < 5:
+        achievmentLevel = "Bronze Schedule Maker"
+        color = "#b7a12f"
+    elif userProfile.schedulesMade >= 5 and userProfile.schedulesMade < 15:
+        achievmentLevel = "Silver Schedule Maker"
+        color = "#adadad"
+    elif userProfile.schedulesMade >= 15:
+        achievmentLevel = "Gold Schedule Maker"
+        color = "#f7c500"
+
     if (request.user.id == uid):
         editAllowed = True
 
@@ -128,6 +141,8 @@ def view_profile(request, uid):
     'userDogs' : userProfile.dogs.all(),
     'userProfile' : userProfile.user,
     'editAllowed' : editAllowed, 
+    'achievment' : achievmentLevel,
+    'achColor' : color,
     }
     return render(request, 'app/view_profile.html', context)
 
@@ -243,6 +258,12 @@ def schedule(request, parkid, dogid):
             Schedule.t_start = form.cleaned_data.get('t_start')
             Schedule.t_end = form.cleaned_data.get('t_end')
             Schedule.save()
+
+            #updateUserScehduleCounter
+            u1 = UserProfile.objects.get(id=request.user.id)
+            u1.schedulesMade = u1.schedulesMade + 1;
+            u1.save()
+
             park.schedules.add(Schedule)
             return redirect('index')
     else:
