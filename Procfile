@@ -1,0 +1,1 @@
+web: gunicorn Bark_In.wsgi --log-file -
