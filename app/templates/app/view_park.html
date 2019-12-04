@@ -29,15 +29,17 @@
         </div>
 		<div class="col profile_col">
 			<h1>Scheduled Dogs: </h1>
-            <div>
+            
                 {% for schedules in parkschedules %}
-                    <h3> {{ schedules.dog }} </h3>
-                    <ol>
-        				<li>{{ schedules }} on {{schedules.date}}</li>
-                        <li>from {{schedules.t_start}} to {{schedules.t_end}}</li>
-                    </ol>
+                <div style="border-radius: 5px;background: rgba(0,0,0,.2);padding-left: 10px;box-shadow: 4px 4px 17px 0px black;">
+                    <a href="{%url 'view_dog' schedules.dog.id %}"><h3> {{ schedules.dog }} </h3></a>
+                    <ul>
+        				<li>{{schedules.date}}</li>
+                        <li>{{schedules.t_start}} to {{schedules.t_end}}</li>
+                    </ul>
+                 </div>
     			{% endfor %}
-            </div>
+           
             {% if user.is_authenticated %}
                 {%for dogs in userDogs %}
                     <p><a href="{%url 'schedule' parkID dogs.pk %}">Add {{dogs.name}}'s schedule! </a></p>
