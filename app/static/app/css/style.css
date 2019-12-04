@@ -183,3 +183,8 @@ margin-left: 4px;
 .vert-center {
     padding: 5% 0;
 }
+
+.long_text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
