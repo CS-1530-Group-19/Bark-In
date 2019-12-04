@@ -50,6 +50,11 @@
 						<li class="nav-item logout-button">
 							<a class="nav-link" href="/logout_view"><b>Logout</b></a>
 						</li>
+						<li class="nav-item">
+							{% block help %}
+							{% endblock %}
+						</li>
+													
 					</ul>
 				</div>
 			</nav>
@@ -63,6 +68,9 @@
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="/signup">Sign Up</a>
+						</li>
+						<li class="nav-item">
+							<span title="Welcome to Bark-In! If you are new to the site, click Sign Up to join now!">help<span>
 						</li>
 					</ul>
 				</div>
