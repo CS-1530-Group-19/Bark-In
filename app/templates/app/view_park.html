@@ -31,7 +31,7 @@
 			<h1>Scheduled Dogs: </h1>
             
                 {% for schedules in parkschedules %}
-                <div style="border-radius: 5px;background: rgba(0,0,0,.2);padding-left: 10px;box-shadow: 4px 4px 17px 0px black;">
+                <div style="border-radius: 5px;background: rgba(0,0,0,.2);padding-left: 10px;">
                     <a href="{%url 'view_dog' schedules.dog.id %}"><h3> {{ schedules.dog }} </h3></a>
                     <ul>
         				<li>{{schedules.date}}</li>
@@ -48,10 +48,12 @@
 		</div>
 		<div class="col profile_col">
 			<h1>Reviews</h1>
-            <p>Average Rating: {{star_rating}}</p>
+            <p>Average Rating: <b>{{star_rating}}</b></p>
             {% for reviews in parkreviews %}
+            <div style="padding: 10px;border-radius: 10px;background:rgba(0,0,0,.3);margin-bottom: 10px;">
 				<p><a href="{%url 'view_profile' reviews.user.id %}">{{ reviews }}</a></p>
-                <p>{{reviews.star_rating}} Stars: "{{reviews.review}}" - {{reviews.timeposted}}</p>			
+                <p>{{reviews.star_rating}} Stars: "{{reviews.review}}" - {{reviews.timeposted}}</p>	
+            </div>		
             {% endfor %}
             {% if user.is_authenticated %}
                  <p><a href="{%url 'review_park' parkID %}">How was your experience at {{name}}?</a></p>            
