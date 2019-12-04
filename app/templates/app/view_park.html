@@ -28,11 +28,16 @@
             {%endif%}
         </div>
 		<div class="col profile_col">
-			<h1>Schedule</h1>
-            {% for schedules in parkschedules %}
-				<p>{{ schedules }} on {{schedules.date}}</p>
-                <p>from {{schedules.t_start}} to {{schedules.t_end}}</p>
-			{% endfor %}
+			<h1>Scheduled Dogs: </h1>
+            <div>
+                {% for schedules in parkschedules %}
+                    <h3> {{ schedules.dog }} </h3>
+                    <ol>
+        				<li>{{ schedules }} on {{schedules.date}}</li>
+                        <li>from {{schedules.t_start}} to {{schedules.t_end}}</li>
+                    </ol>
+    			{% endfor %}
+            </div>
             {% if user.is_authenticated %}
                 {%for dogs in userDogs %}
                     <p><a href="{%url 'schedule' parkID dogs.pk %}">Add {{dogs.name}}'s schedule! </a></p>

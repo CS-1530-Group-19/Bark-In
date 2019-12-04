@@ -30,7 +30,7 @@ def index(request):
         if numReviews >= 1:
             avgStars = totStars/numReviews
         view_park_href = "'view_park/"+str(park.id)+"'"
-        park_string_array += '{"type": "Feature", "properties": { "description": "<strong><a href='+view_park_href+'>'+park.name+'</a></strong><p>'+park.info+'</p>",},"geometry": {"type": "Point","coordinates": ['+str(park.lon)+', '+str(park.lat)+']}}'
+        park_string_array += '{"type": "Feature", "properties": { "description": "<strong><a href='+view_park_href+'>'+park.name+' | Average Rating:'+ avgStars +'</a></strong><p>'+park.info+'</p>",},"geometry": {"type": "Point","coordinates": ['+str(park.lon)+', '+str(park.lat)+']}}'
         park_string_array += ","
         park_string_array += "\n"
     park_string_array = park_string_array[:-2]
