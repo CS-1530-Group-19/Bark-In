@@ -6,15 +6,15 @@
 
 {% block content %}
 
-<br>
-<div class="container-fluid signup-background">
 
+<div class="container-fluid signup-background" style="overflow: auto">
+<br>
 <div class="container ">
     <div class="row">
-        <div class="col-md-6 offset-3 jumbotron signup-content">
+        <div class="col-md-6 offset-3 jumbotron signup-content" style="background-color: none;">
 <div class="container">
     <div class="row">
-        <div class="col profile_col">
+        <div class="col profile_col" style="box-shadow: 3px 5px 9px black;border-radius: 5px;outline:none;">
             <h1>{{ name }}'s profile</h1> 
             <img src= "{{dog_pfp.url}}" class="rounded-circle center" style="width:150px;height:150px;">
             <p class="long_text">Breed: {{ breed }}</p>

@@ -22,10 +22,12 @@
 		<div class="col profile_col">
 			<h1>Dogs</h1>
 			{% for dogs in userDogs %}
-				<p><a href="{%url 'view_dog' dogs.pk %}" >{{ dogs }}</a> : {{dogs.breed}}</p> 
-                {% if editAllowed %}
-                <a href="{%url 'edit_dog_profile' uid dogs.pk%}">Edit Dog</a>
-                {% endif %}
+				<div style="box-shadow: 1px 3px 10px black;padding: 10px;border-radius: 10px;background:rgba(0,0,0,.3)">
+                    <a href="{%url 'view_dog' dogs.pk %}" >{{ dogs }}</a> : {{dogs.breed}}<br> 
+                    {% if editAllowed %}
+                        <a href="{%url 'edit_dog_profile' uid dogs.pk%}">Edit Dog</a>
+                    {% endif %}
+                    </div>
 			{% endfor %}
              {% if editAllowed %}
            <p><a href="{%url 'add_dog' user.id%}">Add a dog to your profile</a></p>
