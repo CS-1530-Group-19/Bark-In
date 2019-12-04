@@ -147,6 +147,17 @@ def view_profile(request, uid):
     return render(request, 'app/view_profile.html', context)
 
 
+def help(request):
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/help.html',
+        {
+            'title':'Help',
+            'year':datetime.now().year,
+        }
+    )
+
 def view_dog(request, dogid):
     dog = Dog.objects.get(pk=dogid)
     context = {
