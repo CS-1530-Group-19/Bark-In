@@ -32,7 +32,7 @@
             
                 {% for schedules in parkschedules %}
                 <div style="border-radius: 5px;background: rgba(0,0,0,.2);padding-left: 10px;box-shadow: 4px 4px 17px 0px black;">
-                    <a href="view_dog/{{ schedules.dog.id }}"><h3> {{ schedules.dog }} </h3></a>
+                    <a href="{%url 'view_dog' schedules.dog.id %}"><h3> {{ schedules.dog }} </h3></a>
                     <ul>
         				<li>{{schedules.date}}</li>
                         <li>{{schedules.t_start}} to {{schedules.t_end}}</li>
